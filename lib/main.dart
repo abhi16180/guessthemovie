@@ -10,14 +10,13 @@ void main() {
   ));
 }
 
-String txt = '', responsetext = 'hey';
-int i = 10;
-int rnd() {
-  var rand = new Random();
-  var i = 0 + rand.nextInt(250 - 0);
-  print(i);
-  return i;
-}
+// int i = 10;
+// int rnd() {
+//   var rand = new Random();
+//   var i = 0 + rand.nextInt(250 - 0);
+//   print(i);
+//   return i;
+// }
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -27,21 +26,23 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String txt = '', responsetext = 'hey';
+  void _fetch() async {
+    var url = Uri.parse(
+        'https://data-imdb1.p.rapidapi.com/movie/order/byRating/?format=json&rapidapi-key=9b70c942efmsha9370d8681f7192p1cb870jsnc7001a636abc');
+
+    var resp = await http.get(url);
+    if (resp.statusCode == 200) {
+      var jsonresp = convert.jsonDecode(resp.body) as Map<String, dynamic>;
+      setState(() {
+        responsetext = (jsonresp["Movie Order By Rating"][0]["title"]);
+      });
+      print(responsetext);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    void _fetch() async {
-      var url = Uri.parse(
-          'https://data-imdb1.p.rapidapi.com/movie/order/byRating/?format=json&rapidapi-key=9b70c942efmsha9370d8681f7192p1cb870jsnc7001a636abc');
-
-      var resp = await http.get(url);
-      if (resp.statusCode == 200) {
-        var jsonresp = convert.jsonDecode(resp.body) as Map<String, dynamic>;
-        responsetext =
-            (jsonresp["Movie Order By Rating"][0]["title"]).toString();
-        print(responsetext);
-      }
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Guess the movie '),
@@ -58,21 +59,19 @@ class _HomeState extends State<Home> {
           child: RichText(
             text: TextSpan(
                 text: "Press the below button\nMOVIE name will appear\n",
+                style: TextStyle(color: Colors.black),
                 children: [
                   TextSpan(
                     text: '$responsetext',
+                    style: TextStyle(color: Colors.black),
                   )
                 ]),
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _fetch();
-            txt = responsetext;
-            i++;
-          });
+        onPressed: () async {
+          _fetch();
         },
         child: Icon(Icons.add),
       ),
