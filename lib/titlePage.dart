@@ -154,7 +154,7 @@ class _TitlePageState extends State<TitlePage> {
                   child: TextField(
                     textAlign: TextAlign.center,
                     controller: controller,
-                    cursorColor: Colors.yellow,
+                    cursorColor: Colors.black,
                     decoration: InputDecoration(
                       hintText: 'Type here',
                       labelText: 'Type letter or movie title',
@@ -281,6 +281,7 @@ class _TitlePageState extends State<TitlePage> {
         backgroundColor: Colors.yellow,
         child: Icon(
           Icons.info_outline_rounded,
+          color: Colors.black,
         ),
       ),
     );

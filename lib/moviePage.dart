@@ -12,6 +12,7 @@ class MoviePage extends StatefulWidget {
 
 String movieTitle = '';
 String moviePlot = '';
+var randomIndex;
 List<String> hiddenTitle = [""];
 
 int rnd() {
@@ -23,7 +24,7 @@ Future fetchTitle() async {
   var URL = Uri.parse(url);
   var response = await http.get(URL);
   var title = convert.jsonDecode(response.body) as Map<dynamic, dynamic>;
-  var randomIndex = rnd();
+  randomIndex = rnd();
   movieTitle = title["Movies"][randomIndex]["Title"].toString().toLowerCase();
   moviePlot = title["Movies"][randomIndex]["Plot"].toString();
   hidetext(movieTitle);
@@ -49,7 +50,39 @@ class _MoviePageState extends State<MoviePage> {
             title: hiddenTitle.join().toString(),
           );
         } else
-          return Center(child: CircularProgressIndicator());
+          return Scaffold(
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.yellow[600],
+                  ),
+                ),
+                SizedBox(
+                  height: 30.0,
+                ),
+                Center(
+                  child: randomIndex % 2 == 0
+                      ? Text(
+                          'This question is tricky...',
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            color: Colors.black,
+                          ),
+                        )
+                      : Text(
+                          'Finding you an easy question...',
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          );
       },
     );
   }
